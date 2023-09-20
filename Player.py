@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
             self.images.append(img)
             self.image = self.images[0]
             self.rect = self.image.get_rect()
+        self.ground = 720
 
     def control(self, x, y):
         """
@@ -38,15 +39,17 @@ class Player(pygame.sprite.Sprite):
         self.movex += x
         self.movey += y
 
-    def update(self):
-        """
-        Update sprite position
-        """
+    def move_player(self):
         if 0 <= (self.rect.x + self.movex) <= 960 - self.image.get_width():
             self.rect.x = self.rect.x + self.movex
         if 0 <= (self.rect.y + self.movey) <= 720 - self.image.get_height():
             self.rect.y = self.rect.y + self.movey
 
+    def update(self):
+        """
+        Update sprite position
+        """
+        self.move_player()
         # moving left
         if self.movex < 0:
             self.frame += 1
@@ -67,9 +70,14 @@ class Player(pygame.sprite.Sprite):
                 neg = 1
                 if self.jumpCount < 0:
                     neg = -1
+
                 self.rect.y -= self.jumpCount ** 2 * 0.1 * neg
                 self.jumpCount -= 1
             else:
                 self.is_jump = False
-                self.rect.y = 720 - self.image.get_height()
+                self.rect.y = self.ground - self.image.get_height()
                 self.jumpCount = JUMPCOUNT
+    def fall(self):
+        while self.rect.y > self.ground:
+            self.rect.y -= 1
+
