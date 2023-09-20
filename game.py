@@ -19,6 +19,7 @@ from typing import Tuple
 import pygame
 import sys
 import os
+from Player import Player
 
 '''
 Variables
@@ -26,98 +27,12 @@ Variables
 
 worldx = 960
 worldy = 720
-fps = 40
-ani = 4
+fps = 60
 world = pygame.display.set_mode([worldx, worldy])
 
 BLUE = (25, 25, 200)
 BLACK = (23, 23, 23)
 WHITE = (254, 254, 254)
-ALPHA = (0, 255, 0)
-
-'''
-Objects
-'''
-
-
-class Player(pygame.sprite.Sprite):
-    """
-    Spawn a player
-    """
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.mass = 1
-        self.vel = 5
-        self.movex = 0
-        self.movey = 0
-        self.frame = 0
-        self.is_jump = False
-        self.images = []
-        for i in range(1, 5):
-            img = pygame.image.load(os.path.join('images', 'mario.png')).convert()
-            img = pygame.transform.scale(img, (50, 50))
-            img = img.convert_alpha()  # optimise alpha
-            img.set_colorkey(ALPHA)  # set alpha
-            self.images.append(img)
-            self.image = self.images[0]
-            self.rect = self.image.get_rect()
-
-    def control(self, x, y):
-        """
-        control player movement
-        """
-        self.movex += x
-        self.movey += y
-
-    def update(self):
-        """
-        Update sprite position
-        """
-
-        self.rect.x = self.rect.x + self.movex
-        self.rect.y = self.rect.y + self.movey
-
-        # moving left
-        if self.movex < 0:
-            self.frame += 1
-            if self.frame > 3 * ani:
-                self.frame = 0
-            self.image = pygame.transform.flip(self.images[self.frame // ani], True, False)
-
-        # moving right
-        if self.movex > 0:
-            self.frame += 1
-            if self.frame > 3 * ani:
-                self.frame = 0
-            self.image = self.images[self.frame // ani]
-            
-        # jump
-        if self.is_jump:
-            # calculate force (F). F = 1 / 2 * mass * velocity ^ 2.
-            F_orce = (1 / 2) * self.mass * (self.vel ** 2)
-
-            # change in the y co-ordinate
-            self.movey -= F_orce
-
-            # decreasing velocity while going up and become negative while coming down
-            self.vel = self.vel - 1
-
-            # object reached its maximum height
-            if self.vel < 0:
-                print("test3")
-                # negative sign is added to counter negative velocity
-                self.mass = -1
-            # objected reaches its original state
-            if self.vel == -6:
-                print("test")
-                # making isjump equal to false
-                self.is_jump = False
-
-                # setting original values to v and m
-                self.vel = 5
-                self.mass = 1
-
 
 '''
 Setup
