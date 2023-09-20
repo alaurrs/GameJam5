@@ -61,25 +61,9 @@ block_list = pygame.sprite.Group()
 Main Loop
 '''
 
-
-def update():
-    is_collide = collision(player)
-    return None
-
-
-def collision(box1, box2):
-    if (((box2.rect.x >= box1.rect.x + box1.w)  # trop à droite
-         or (box2.x + box2.w <= box1.x)  # trop à gauche
-         or (box2.y >= box1.y + box1.h)  # trop en bas
-         or (box2.y + box2.h <= box1.y))):  # trop en haut
-        return False
-    else:
-        return True
-
-
 def put_block():
     block = Block()
-    block.rect.x = player.rect.x + 50
+    block.rect.x = player.rect.x + player.image.get_width()
     block.rect.y = player.rect.y
     block_list.add(block)
     block_list.draw(backdrop)
@@ -122,7 +106,6 @@ while main:
                 player.control(-steps, 0)
 
     world.blit(backdrop, backdropbox)
-    update()
     player.update()
     player_list.draw(world)
     pygame.display.flip()
