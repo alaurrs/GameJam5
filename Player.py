@@ -4,6 +4,7 @@ import sys
 
 ALPHA = (0, 255, 0)
 ani = 4
+JUMPCOUNT = 15
 
 
 class Player(pygame.sprite.Sprite):
@@ -19,11 +20,11 @@ class Player(pygame.sprite.Sprite):
         self.movey = 0
         self.frame = 0
         self.is_jump = False
-        self.jumpCount = 10
+        self.jumpCount = JUMPCOUNT
         self.images = []
         for i in range(1, 5):
             img = pygame.image.load(os.path.join('images', 'mario.png')).convert()
-            img = pygame.transform.scale(img, (50, 50))
+            img = pygame.transform.scale(img, (100, 100))
             img = img.convert_alpha()  # optimise alpha
             img.set_colorkey(ALPHA)  # set alpha
             self.images.append(img)
@@ -41,9 +42,9 @@ class Player(pygame.sprite.Sprite):
         """
         Update sprite position
         """
-        if 0 <= (self.rect.x + self.movex) <= 910:
+        if 0 <= (self.rect.x + self.movex) <= 960 - self.image.get_width():
             self.rect.x = self.rect.x + self.movex
-        if 0 <= (self.rect.y + self.movey) <= 670:
+        if 0 <= (self.rect.y + self.movey) <= 720 - self.image.get_height():
             self.rect.y = self.rect.y + self.movey
 
         # moving left
@@ -62,14 +63,13 @@ class Player(pygame.sprite.Sprite):
 
         # jump
         if self.is_jump:
-            if self.jumpCount >= -10:
+            if self.jumpCount >= -JUMPCOUNT:
                 neg = 1
                 if self.jumpCount < 0:
                     neg = -1
                 self.rect.y -= self.jumpCount ** 2 * 0.1 * neg
-                if self.rect.y >= 670:
-                    self.rect.y = 670
                 self.jumpCount -= 1
             else:
                 self.is_jump = False
-                self.jumpCount = 10
+                self.rect.y = 720 - self.image.get_height()
+                self.jumpCount = JUMPCOUNT
