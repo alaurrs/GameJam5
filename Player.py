@@ -5,6 +5,7 @@ import sys
 ALPHA = (0, 255, 0)
 ani = 4
 
+
 class Player(pygame.sprite.Sprite):
     """
     Spawn a player
@@ -40,9 +41,10 @@ class Player(pygame.sprite.Sprite):
         """
         Update sprite position
         """
-
-        self.rect.x = self.rect.x + self.movex
-        self.rect.y = self.rect.y + self.movey
+        if 0 <= (self.rect.x + self.movex) <= 910:
+            self.rect.x = self.rect.x + self.movex
+        if 0 <= (self.rect.y + self.movey) <= 670:
+            self.rect.y = self.rect.y + self.movey
 
         # moving left
         if self.movex < 0:
@@ -65,6 +67,8 @@ class Player(pygame.sprite.Sprite):
                 if self.jumpCount < 0:
                     neg = -1
                 self.rect.y -= self.jumpCount ** 2 * 0.1 * neg
+                if self.rect.y >= 670:
+                    self.rect.y = 670
                 self.jumpCount -= 1
             else:
                 self.is_jump = False
