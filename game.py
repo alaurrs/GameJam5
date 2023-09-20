@@ -20,6 +20,7 @@ import pygame
 import sys
 import os
 from Player import Player
+from Block import Block
 
 '''
 Variables
@@ -46,14 +47,45 @@ main = True
 
 player = Player()  # spawn player
 player.rect.x = 0  # go to x
-player.rect.y = worldy - 50  # go to y
+player.rect.y = worldy - player.image.get_width()  # go to y
 player_list = pygame.sprite.Group()
 player_list.add(player)
 steps = 10
 
 '''
+Objects
+'''
+block_list = pygame.sprite.Group()
+
+'''
 Main Loop
 '''
+
+
+def update():
+    is_collide = collision(player)
+    return None
+
+
+def collision(box1, box2):
+    if (((box2.rect.x >= box1.rect.x + box1.w)  # trop à droite
+         or (box2.x + box2.w <= box1.x)  # trop à gauche
+         or (box2.y >= box1.y + box1.h)  # trop en bas
+         or (box2.y + box2.h <= box1.y))):  # trop en haut
+        return False
+    else:
+        return True
+
+
+def put_block():
+    block = Block()
+    block.rect.x = player.rect.x + 50
+    block.rect.y = player.rect.y
+    block_list.add(block)
+    block_list.draw(backdrop)
+    print(block_list)
+    print("block")
+
 
 while main:
     for event in pygame.event.get():
@@ -75,6 +107,9 @@ while main:
                 player.control(-steps, 0)
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
                 player.control(steps, 0)
+            if event.key == pygame.K_j:
+                print("j")
+                put_block()
             if not player.is_jump:
                 if event.key == pygame.K_UP or event.key == ord('w') or event.key == pygame.K_SPACE:
                     print('jump')
@@ -87,6 +122,7 @@ while main:
                 player.control(-steps, 0)
 
     world.blit(backdrop, backdropbox)
+    update()
     player.update()
     player_list.draw(world)
     pygame.display.flip()
