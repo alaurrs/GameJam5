@@ -2,9 +2,12 @@ import pygame
 import os
 from Player import Player
 from Level import Level
+from soundManager import SoundManager
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
+
+sound_manager = SoundManager() 
 
 class Game(object):
     def __init__(self):
@@ -66,6 +69,8 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     #screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    sound_manager.play_game_music()
 
     pygame.display.set_caption("The Artist")
     clock = pygame.time.Clock()
