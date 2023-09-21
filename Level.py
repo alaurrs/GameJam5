@@ -41,7 +41,7 @@ class Level(object):
         for layer in self.layers:
             layer.draw(screen)
     def put_block(self,x,y):
-        block_img = pygame.image.load(os.path.join("images", "block.png"))
-        block_img = pygame.transform.scale(block_img, (50,50))
+        block_img = pygame.image.load(os.path.join("images", "bulle.png"))
+        block_img = pygame.transform.scale(block_img, (75,75))
         tile = Tile(block_img, x,y)
         self.layers[0].tiles.add(tile)
