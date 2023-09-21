@@ -1,5 +1,7 @@
+import pygame.image
 import pytmx
-from Layer import Layer, TILESCALE
+import os
+from Layer import Layer, Tile, TILESCALE
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 class Level(object):
@@ -26,7 +28,7 @@ class Level(object):
     # Move layer left/right
     def shiftLevel(self, shiftX, shiftY):
         self.levelShiftX += shiftX * TILESCALE
-        self.levelShiftY += shiftY
+        self.levelShiftY += shiftY * TILESCALE
 
         for layer in self.layers:
             for tile in layer.tiles:
@@ -38,3 +40,8 @@ class Level(object):
     def draw(self, screen):
         for layer in self.layers:
             layer.draw(screen)
+    def put_block(self,x,y):
+        block_img = pygame.image.load(os.path.join("images", "block.png"))
+        block_img = pygame.transform.scale(block_img, (50,50))
+        tile = Tile(block_img, x,y)
+        self.layers[0].tiles.add(tile)

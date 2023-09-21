@@ -25,10 +25,21 @@ class Player(pygame.sprite.Sprite):
         self.jumpCount = JUMPCOUNT
         self.images = []
         for i in range(1, 5):
-            img = pygame.image.load(os.path.join('images', 'mario.png')).convert()
+            img = pygame.image.load(os.path.join('images', 'player_tn.png')).convert()
             img = pygame.transform.scale(img, (125, 125))
             img = img.convert_alpha()  # optimise alpha
             img.set_colorkey(ALPHA)  # set alpha
+
+            imgR = pygame.image.load(os.path.join('images', 'player_run_1_tn.png')).convert()
+            imgR = pygame.transform.scale(imgR, (125, 125))
+            imgR = imgR.convert_alpha()  # optimise alpha
+            imgR.set_colorkey(ALPHA)  # set alpha
+
+            imgR2 = pygame.image.load(os.path.join('images', 'player_run_2_tn.png')).convert()
+            imgR2 = pygame.transform.scale(imgR2, (125, 125))
+            imgR2 = imgR2.convert_alpha()  # optimise alpha
+            imgR2.set_colorkey(ALPHA)  # set alpha
+
             self.images.append(img)
             self.image = self.images[0]
             self.rect = self.image.get_rect()
@@ -38,6 +49,13 @@ class Player(pygame.sprite.Sprite):
         self.running = False
         self.runningFrame = 0
         self.runningTime = pygame.time.get_ticks()
+
+        # List of frames for each animation
+        self.runningRight = (imgR, img, imgR2)
+
+        self.runningLeft = (pygame.transform.flip(imgR, True, False),
+                            pygame.transform.flip(img, True, False),
+                            pygame.transform.flip(imgR2, True, False))
 
         self.currentLevel = None
     def draw(self,screen):
@@ -65,6 +83,10 @@ class Player(pygame.sprite.Sprite):
         if len(tileHitList) > 0:
             self.changeY = -10
 
+    def put_block(self):
+        print("FEURjj")
+
+
     def update(self):
 
         self.rect.x += self.changeX
@@ -91,6 +113,21 @@ class Player(pygame.sprite.Sprite):
             self.rect.left = const
             self.currentLevel.shiftLevel(difference, 0)
 
+
+        const = 200
+
+        # Move screen if player reaches screen bounds
+        if self.rect.bottom >= SCREEN_HEIGHT - const:
+            difference = self.rect.bottom - (SCREEN_HEIGHT - const)
+            self.rect.bottom = SCREEN_HEIGHT - const
+            self.currentLevel.shiftLevel(0, -difference)
+
+        # Move screen is player reaches screen bounds
+        if self.rect.top <= const:
+            difference = const - self.rect.top
+            self.rect.top = const
+            self.currentLevel.shiftLevel(0, difference)
+
         self.rect.y += self.changeY
 
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
@@ -108,9 +145,16 @@ class Player(pygame.sprite.Sprite):
         else:
             self.changeY += 0.2
 
+        # If player is on ground and running, update running animation
+        if self.running and self.changeY == 1:
+            if self.direction == "right":
+                self.image = self.runningRight[self.runningFrame]
+            else:
+                self.image = self.runningLeft[self.runningFrame]
+
         if pygame.time.get_ticks() - self.runningTime > 50:
             self.runningTime = pygame.time.get_ticks()
-            if self.runningFrame == 4:
+            if self.runningFrame == 2:
                 self.runningFrame = 0
             else:
                 self.runningFrame += 1

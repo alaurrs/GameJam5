@@ -35,12 +35,19 @@ class Game(object):
                     self.player.goRight()
                 elif event.key == pygame.K_UP:
                     self.player.jump()
+                elif event.key == pygame.K_j:
+                    print("J")
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT and self.player.changeX < 0:
                     self.player.stop()
                 elif event.key == pygame.K_RIGHT and self.player.changeX > 0:
                     self.player.stop()
-
+            if pygame.mouse.get_pressed(3)[0] == True:
+                mousePos = pygame.mouse.get_pos()
+                # Arrondir mousePos[0] et mousePos[1] aux multiples de 24
+                rounded_x = round(mousePos[0] / 50) * 50
+                rounded_y = round(mousePos[1] / 50) * 50
+                self.put_block(rounded_x, rounded_y)
     def runLogic(self):
         self.player.update()
         return None
@@ -50,6 +57,12 @@ class Game(object):
         self.currentLevel.draw(screen)
         self.player.draw(screen)
         pygame.display.flip()
+
+    def put_block(self,x,y):
+        self.player.put_block()
+        self.currentLevel.put_block(x, y)
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
