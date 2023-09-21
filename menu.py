@@ -1,8 +1,9 @@
 import pygame, sys
 from button import Button
 import main
+from soundManager import SoundManager
 
-
+sound_manager = SoundManager() 
 
 def get_font(size): 
     return pygame.font.Font("images/menu/font.ttf", size)
@@ -82,9 +83,10 @@ def options():
                     main_menu()
 
         pygame.display.update()
-        
+
 
 if __name__ == "__main__":
+    sound_manager.play_menu_music()
     main_menu()
 
 

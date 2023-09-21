@@ -3,6 +3,7 @@ import os
 import sys
 from Level import Level, SCREEN_HEIGHT, SCREEN_WIDTH
 from Layer import Layer
+from soundManager import SoundManager 
 
 ALPHA = (0, 255, 0)
 ani = 4
@@ -21,6 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.changeX = 0
         self.changeY = 0
         self.direction = "right"
+        self.sound = SoundManager()
 
         self.is_jump = False
         self.jumpCount = JUMPCOUNT
@@ -80,6 +82,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += 5
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
         self.rect.y -= 20
+        self.sound.play_jump_sound()
 
         if len(tileHitList) > 0:
             self.changeY = -7
