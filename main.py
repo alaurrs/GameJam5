@@ -21,7 +21,7 @@ class Game(object):
         self.player.rect.x = 40
         self.player.rect.y = 500 - self.player.image.get_height()
         self.player.currentLevel = self.levels[self.currentLevelNumber]
-        self.currentLevel.shiftLevel(0,-9000)
+        self.currentLevel.shiftLevel(0,-6600)
     def processEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

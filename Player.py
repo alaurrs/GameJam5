@@ -1,7 +1,7 @@
 import pygame
 import os
 import sys
-from Level import Level
+from Level import Level, SCREEN_HEIGHT, SCREEN_WIDTH
 from Layer import Layer
 
 ALPHA = (0, 255, 0)
@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.images = []
         for i in range(1, 5):
             img = pygame.image.load(os.path.join('images', 'mario.png')).convert()
-            img = pygame.transform.scale(img, (200, 200))
+            img = pygame.transform.scale(img, (125, 125))
             img = img.convert_alpha()  # optimise alpha
             img.set_colorkey(ALPHA)  # set alpha
             self.images.append(img)
@@ -59,7 +59,7 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         self.rect.y += 5
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
-        self.rect.y -= 8
+        self.rect.y -= 10
 
         if len(tileHitList) > 0:
             self.changeY = -10
@@ -69,6 +69,21 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.changeX
 
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
+
+
+
+        const = 200
+        # Move screen if player reaches screen bounds
+        if self.rect.right >= SCREEN_WIDTH - const:
+            difference = self.rect.right - (SCREEN_WIDTH - const)
+            self.rect.right = SCREEN_WIDTH - const
+            self.currentLevel.shiftLevel(-difference, 0)
+
+        # Move screen is player reaches screen bounds
+        if self.rect.left <= const:
+            difference = const - self.rect.left
+            self.rect.left = const
+            self.currentLevel.shiftLevel(difference, 0)
 
         if len(tileHitList) > 0 :
 
