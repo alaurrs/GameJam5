@@ -50,6 +50,8 @@ class Game(object):
         self.currentLevel.draw(screen)
         self.player.draw(screen)
         pygame.display.flip()
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
@@ -69,4 +71,5 @@ def main():
     pygame.quit()
 
 
-main()
+if __name__ == '__main__':
+    main()
