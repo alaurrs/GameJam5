@@ -62,7 +62,6 @@ class Game(object):
         self.player.put_block()
         self.currentLevel.put_block(x, y)
 
-
 def main():
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
@@ -82,4 +81,5 @@ def main():
     pygame.quit()
 
 
-main()
+if __name__ == '__main__':
+    main()
