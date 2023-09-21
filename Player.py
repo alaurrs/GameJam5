@@ -21,8 +21,6 @@ class Player(pygame.sprite.Sprite):
         self.changeY = 0
         self.direction = "right"
 
-        self.running = False
-        self.runningFrame = 0
         self.is_jump = False
         self.jumpCount = JUMPCOUNT
         self.images = []
@@ -36,6 +34,9 @@ class Player(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
         self.ground = 720
 
+
+        self.running = False
+        self.runningFrame = 0
         self.runningTime = pygame.time.get_ticks()
 
         self.currentLevel = None
@@ -59,7 +60,7 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         self.rect.y += 5
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
-        self.rect.y -= 10
+        self.rect.y -= 20
 
         if len(tileHitList) > 0:
             self.changeY = -10
@@ -70,7 +71,12 @@ class Player(pygame.sprite.Sprite):
 
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
 
-
+        #Move player to correct side of that block
+        for tile in tileHitList:
+            if self.changeX > 0:
+                self.rect.right = tile.rect.left
+            else:
+                self.rect.left = tile.rect.right
 
         const = 200
         # Move screen if player reaches screen bounds
@@ -84,6 +90,10 @@ class Player(pygame.sprite.Sprite):
             difference = const - self.rect.left
             self.rect.left = const
             self.currentLevel.shiftLevel(difference, 0)
+
+        self.rect.y += self.changeY
+        
+        tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
 
         if len(tileHitList) > 0 :
 
@@ -105,5 +115,3 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.runningFrame += 1
 
-
-        self.rect.y += self.changeY
