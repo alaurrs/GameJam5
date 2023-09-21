@@ -55,7 +55,7 @@ def main():
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     #screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    pygame.display.set_caption("Pygame Tiled Demo")
+    pygame.display.set_caption("The Artist")
     clock = pygame.time.Clock()
     done = False
     game = Game()
