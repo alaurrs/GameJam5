@@ -78,7 +78,7 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.left = tile.rect.right
 
-        const = 200
+        const = 800
         # Move screen if player reaches screen bounds
         if self.rect.right >= SCREEN_WIDTH - const:
             difference = self.rect.right - (SCREEN_WIDTH - const)
@@ -92,7 +92,7 @@ class Player(pygame.sprite.Sprite):
             self.currentLevel.shiftLevel(difference, 0)
 
         self.rect.y += self.changeY
-        
+
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
 
         if len(tileHitList) > 0 :
