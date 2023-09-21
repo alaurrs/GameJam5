@@ -17,6 +17,7 @@
 from typing import Tuple
 
 import pygame
+import pytmx
 import sys
 import os
 from Player import Player
@@ -70,6 +71,69 @@ def put_block():
     print(block_list)
     print("block")
 
+class Level(object):
+    def __init__(self,fileName):
+        self.mapObject = pytmx.load_pygame(fileName)
+
+        self.layers = []
+
+        self.levelShift = 0
+
+        for layer in range(len(self.mapObject.layers)):
+            self.layers.append(Layer(index = layer, mapObject = self.mapObject))
+
+    def shiftLevel(self, shiftX):
+        self.levelShift += shiftX
+
+        for layer in self.layers:
+            for tile in layer.tiles:
+                tile.rect.x += shiftX
+
+    def draw(self,screen):
+        for layer in self.layers:
+            layer.draw(screen)
+
+class Layer(object):
+    def __init__(self, index, mapObject):
+        # Layer index from tiled map
+        self.index = index
+
+        # Create gruop of tiles for this layer
+        self.tiles = pygame.sprite.Group()
+
+        # Reference map object
+        self.mapObject = mapObject
+
+        # Create tiles in the right position for each layer
+        for x in range(self.mapObject.width):
+            for y in range(self.mapObject.height):
+                img = self.mapObject.get_tile_image(x, y, self.index)
+                if img:
+                    self.tiles.add(Tile(image=img, x=(x * self.mapObject.tilewidth), y=(y * self.mapObject.tileheight)))
+
+    # Draw layer
+    def draw(self, screen):
+        self.tiles.draw(screen)
+
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, image, x, y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+class SpriteSheet(object):
+    def __init__(self, fileName):
+        self.sheet = pygame.image.load(fileName)
+
+    def image_at(self, rectangle):
+        rect = pygame.Rect(rectangle)
+        image = pygame.Surface(rect.size, pygame.SRCALPHA, 32).convert_alpha()
+        image.blit(self.sheet, (0, 0), rect)
+        return image
 
 while main:
     for event in pygame.event.get():
