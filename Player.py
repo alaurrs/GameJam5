@@ -1,12 +1,14 @@
 import pygame
 import os
 import sys
+from Level import Level
+from Layer import Layer
 
 ALPHA = (0, 255, 0)
 ani = 4
 JUMPCOUNT = 15
-
-
+WALK_SPEED = 12
+MAP_COLLISION_LAYER = 0
 class Player(pygame.sprite.Sprite):
     """
     Spawn a player
@@ -14,17 +16,19 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.mass = 1
-        self.vel = 5
-        self.movex = 0
-        self.movey = 0
-        self.frame = 0
+        # Speed and direction
+        self.changeX = 0
+        self.changeY = 0
+        self.direction = "right"
+
+        self.running = False
+        self.runningFrame = 0
         self.is_jump = False
         self.jumpCount = JUMPCOUNT
         self.images = []
         for i in range(1, 5):
             img = pygame.image.load(os.path.join('images', 'mario.png')).convert()
-            img = pygame.transform.scale(img, (100, 100))
+            img = pygame.transform.scale(img, (200, 200))
             img = img.convert_alpha()  # optimise alpha
             img.set_colorkey(ALPHA)  # set alpha
             self.images.append(img)
@@ -32,52 +36,59 @@ class Player(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
         self.ground = 720
 
-    def control(self, x, y):
-        """
-        control player movement
-        """
-        self.movex += x
-        self.movey += y
+        self.runningTime = pygame.time.get_ticks()
 
-    def move_player(self):
-        if 0 <= (self.rect.x + self.movex) <= 960 - self.image.get_width():
-            self.rect.x = self.rect.x + self.movex
-        if 0 <= (self.rect.y + self.movey) <= 720 - self.image.get_height():
-            self.rect.y = self.rect.y + self.movey
+        self.currentLevel = None
+    def draw(self,screen):
+        screen.blit(self.image, self.rect)
+
+    def goRight(self):
+        self.direction = "right"
+        self.running = True
+        self.changeX = WALK_SPEED
+
+    def goLeft(self):
+        self.direction = "left"
+        self.running = True
+        self.changeX = -WALK_SPEED
+
+    def stop(self):
+        self.running = False
+        self.changeX = 0
+
+    def jump(self):
+        self.rect.y += 5
+        tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
+        self.rect.y -= 8
+
+        if len(tileHitList) > 0:
+            self.changeY = -10
 
     def update(self):
-        """
-        Update sprite position
-        """
-        self.move_player()
-        # moving left
-        if self.movex < 0:
-            self.frame += 1
-            if self.frame > 3 * ani:
-                self.frame = 0
-            self.image = pygame.transform.flip(self.images[self.frame // ani], True, False)
 
-        # moving right
-        if self.movex > 0:
-            self.frame += 1
-            if self.frame > 3 * ani:
-                self.frame = 0
-            self.image = self.images[self.frame // ani]
+        self.rect.x += self.changeX
 
-        # jump
-        if self.is_jump:
-            if self.jumpCount >= -JUMPCOUNT:
-                neg = 1
-                if self.jumpCount < 0:
-                    neg = -1
+        tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
 
-                self.rect.y -= self.jumpCount ** 2 * 0.1 * neg
-                self.jumpCount -= 1
+        if len(tileHitList) > 0 :
+
+            for tile in tileHitList:
+                if self.changeY > 0:
+                    self.rect.bottom = tile.rect.top
+                    self.changeY = 1
+
+                else:
+                    self.rect.top = tile.rect.bottom
+                    self.changeY = 0
+        else:
+            self.changeY += 0.2
+
+        if pygame.time.get_ticks() - self.runningTime > 50:
+            self.runningTime = pygame.time.get_ticks()
+            if self.runningFrame == 4:
+                self.runningFrame = 0
             else:
-                self.is_jump = False
-                self.rect.y = self.ground - self.image.get_height()
-                self.jumpCount = JUMPCOUNT
-    def fall(self):
-        while self.rect.y > self.ground:
-            self.rect.y -= 1
+                self.runningFrame += 1
 
+
+        self.rect.y += self.changeY
