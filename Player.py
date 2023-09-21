@@ -9,6 +9,7 @@ ani = 4
 JUMPCOUNT = 15
 WALK_SPEED = 12
 MAP_COLLISION_LAYER = 0
+MAP_EMPTY_LAYER = 1
 class Player(pygame.sprite.Sprite):
     """
     Spawn a player
@@ -81,7 +82,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y -= 20
 
         if len(tileHitList) > 0:
-            self.changeY = -10
+            self.changeY = -7
 
     def put_block(self):
         print("FEURjj")
@@ -92,6 +93,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.changeX
 
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
+
+        tileEmptyList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_EMPTY_LAYER].tiles, False)
 
         #Move player to correct side of that block
         for tile in tileHitList:
@@ -144,6 +147,9 @@ class Player(pygame.sprite.Sprite):
                     self.changeY = 0
         else:
             self.changeY += 0.2
+
+        if len(tileEmptyList) > 0:
+            print("Défaite")
 
         # If player is on ground and running, update running animation
         if self.running and self.changeY == 1:

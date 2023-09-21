@@ -44,10 +44,13 @@ class Game(object):
                     self.player.stop()
             if pygame.mouse.get_pressed(3)[0] == True:
                 mousePos = pygame.mouse.get_pos()
-                # Arrondir mousePos[0] et mousePos[1] aux multiples de 24
-                rounded_x = round(mousePos[0] / 50) * 50
-                rounded_y = round(mousePos[1] / 50) * 50
-                self.put_block(rounded_x, rounded_y)
+                # Arrondir mousePos[0] et mousePos[1] aux multiples de 75
+                round_player_x = self.player.rect.x
+                round_player_y = self.player.rect.y
+                rounded_x = round(mousePos[0] / 75) * 75
+                rounded_y = round(mousePos[1] / 75) * 75
+                if abs(rounded_x - round_player_x) >= 75 or abs(rounded_y - round_player_y) >= 75:
+                    self.put_block(rounded_x, rounded_y)
     def runLogic(self):
         self.player.update()
         return None
