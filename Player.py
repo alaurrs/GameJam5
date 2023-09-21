@@ -5,12 +5,12 @@ from Level import Level, SCREEN_HEIGHT, SCREEN_WIDTH
 from Layer import Layer
 from soundManager import SoundManager 
 
-ALPHA = (0, 255, 0)
+ALPHA = (160, 160, 160)
 ani = 4
 JUMPCOUNT = 15
-WALK_SPEED = 12
+WALK_SPEED = 5
 MAP_COLLISION_LAYER = 0
-MAP_EMPTY_LAYER = 1
+MAP_EMPTY_LAYER = 2
 class Player(pygame.sprite.Sprite):
     """
     Spawn a player
@@ -29,18 +29,18 @@ class Player(pygame.sprite.Sprite):
         self.images = []
         for i in range(1, 5):
             img = pygame.image.load(os.path.join('images', 'player_tn.png')).convert()
-            img = pygame.transform.scale(img, (125, 125))
-            img = img.convert_alpha()  # optimise alpha
+            img = pygame.transform.scale(img, (100, 100))
+            #img = img.convert_alpha()  # optimise alpha
             img.set_colorkey(ALPHA)  # set alpha
 
             imgR = pygame.image.load(os.path.join('images', 'player_run_1_tn.png')).convert()
-            imgR = pygame.transform.scale(imgR, (125, 125))
-            imgR = imgR.convert_alpha()  # optimise alpha
+            imgR = pygame.transform.scale(imgR, (100, 100))
+            #imgR = imgR.convert_alpha()  # optimise alpha
             imgR.set_colorkey(ALPHA)  # set alpha
 
             imgR2 = pygame.image.load(os.path.join('images', 'player_run_2_tn.png')).convert()
-            imgR2 = pygame.transform.scale(imgR2, (125, 125))
-            imgR2 = imgR2.convert_alpha()  # optimise alpha
+            imgR2 = pygame.transform.scale(imgR2, (100, 100))
+            #imgR2 = imgR2.convert_alpha()  # optimise alpha
             imgR2.set_colorkey(ALPHA)  # set alpha
 
             self.images.append(img)
@@ -59,7 +59,7 @@ class Player(pygame.sprite.Sprite):
         self.runningLeft = (pygame.transform.flip(imgR, True, False),
                             pygame.transform.flip(img, True, False),
                             pygame.transform.flip(imgR2, True, False))
-
+        self.gameLost = False
         self.currentLevel = None
     def draw(self,screen):
         screen.blit(self.image, self.rect)
@@ -79,9 +79,9 @@ class Player(pygame.sprite.Sprite):
         self.changeX = 0
 
     def jump(self):
-        self.rect.y += 5
+        self.rect.y += 1
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
-        self.rect.y -= 20
+        self.rect.y -= 2
         self.sound.play_jump_sound()
 
         if len(tileHitList) > 0:
@@ -106,7 +106,7 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.left = tile.rect.right
 
-        const = 800
+        const = 600
         # Move screen if player reaches screen bounds
         if self.rect.right >= SCREEN_WIDTH - const:
             difference = self.rect.right - (SCREEN_WIDTH - const)
@@ -153,6 +153,7 @@ class Player(pygame.sprite.Sprite):
 
         if len(tileEmptyList) > 0:
             print("Défaite")
+            self.gameLost = True
 
         # If player is on ground and running, update running animation
         if self.running and self.changeY == 1:

@@ -9,13 +9,16 @@ SCREEN_HEIGHT = 1080
 
 sound_manager = SoundManager() 
 
+def get_font(size):
+    return pygame.font.Font("images/menu/font.ttf", size)
+
 class Game(object):
     def __init__(self):
 
         # Level setup
         self.currentLevelNumber = 0
         self.levels = []
-        self.levels.append(Level(fileName = "levels/level_data/test1.tmx"))
+        self.levels.append(Level(fileName = "levels/level_data/bwmap1.tmx"))
         self.currentLevel = self.levels[self.currentLevelNumber]
 
         self.overlay = pygame.image.load(os.path.join('images', 'back.png'))
@@ -24,7 +27,7 @@ class Game(object):
         self.player.rect.x = 40
         self.player.rect.y = 500 - self.player.image.get_height()
         self.player.currentLevel = self.levels[self.currentLevelNumber]
-        self.currentLevel.shiftLevel(0,-6600)
+        self.currentLevel.shiftLevel(-500,-900)
     def processEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -38,8 +41,6 @@ class Game(object):
                     self.player.goRight()
                 elif event.key == pygame.K_UP:
                     self.player.jump()
-                elif event.key == pygame.K_j:
-                    print("J")
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT and self.player.changeX < 0:
                     self.player.stop()
@@ -55,13 +56,23 @@ class Game(object):
                 if abs(rounded_x - round_player_x) >= 75 or abs(rounded_y - round_player_y) >= 75:
                     self.put_block(rounded_x, rounded_y)
     def runLogic(self):
-        self.player.update()
+        if not self.player.gameLost:
+            self.player.update()
         return None
+
+    def checkGameLost(self, screen):
+        if self.player.gameLost:
+            DEFEAT_TEXT = get_font(100).render("DEFEAT", True, "#b68f40")
+            DEFEAT_RECT = DEFEAT_TEXT.get_rect(center=(640, 100))
+            screen.blit(DEFEAT_TEXT, DEFEAT_RECT)
+            pygame.display.update()
+            return self.player.gameLost
 
     def draw(self, screen):
         screen.blit(self.overlay, [0,0])
         self.currentLevel.draw(screen)
         self.player.draw(screen)
+        self.checkGameLost(screen)
         pygame.display.flip()
 
     def put_block(self,x,y):
@@ -84,6 +95,7 @@ def main():
         done = game.processEvents()
         game.runLogic()
         game.draw(screen)
+        #game.checkGameLost(screen)
         clock.tick(60)
 
     pygame.quit()

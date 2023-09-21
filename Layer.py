@@ -1,6 +1,6 @@
 import pygame
 
-TILESCALE = 0.12
+TILESCALE = 0.5
 
 class Layer(object):
     def __init__(self, index, mapObject):
