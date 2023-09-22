@@ -11,6 +11,7 @@ JUMPCOUNT = 15
 WALK_SPEED = 5
 MAP_COLLISION_LAYER = 0
 MAP_EMPTY_LAYER = 2
+MAP_VICTORY_LAYER = 3
 class Player(pygame.sprite.Sprite):
     """
     Spawn a player
@@ -60,6 +61,7 @@ class Player(pygame.sprite.Sprite):
                             pygame.transform.flip(img, True, False),
                             pygame.transform.flip(imgR2, True, False))
         self.gameLost = False
+        self.gameVictory = False
         self.currentLevel = None
     def draw(self,screen):
         screen.blit(self.image, self.rect)
@@ -75,6 +77,7 @@ class Player(pygame.sprite.Sprite):
         self.changeX = -WALK_SPEED
 
     def stop(self):
+        self.image = self.images[0]
         self.running = False
         self.changeX = 0
 
@@ -85,7 +88,7 @@ class Player(pygame.sprite.Sprite):
         self.sound.play_jump_sound()
 
         if len(tileHitList) > 0:
-            self.changeY = -7
+            self.changeY = -9
 
     def put_block(self):
         print("FEURjj")
@@ -98,6 +101,9 @@ class Player(pygame.sprite.Sprite):
         tileHitList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_COLLISION_LAYER].tiles, False)
 
         tileEmptyList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_EMPTY_LAYER].tiles, False)
+
+        tileVictoryList = pygame.sprite.spritecollide(self, self.currentLevel.layers[MAP_VICTORY_LAYER].tiles, False)
+
 
         #Move player to correct side of that block
         for tile in tileHitList:
@@ -154,6 +160,9 @@ class Player(pygame.sprite.Sprite):
         if len(tileEmptyList) > 0:
             print("Défaite")
             self.gameLost = True
+        if len(tileVictoryList) > 0:
+            print("Victoire")
+            self.gameVictory = True
 
         # If player is on ground and running, update running animation
         if self.running and self.changeY == 1:
