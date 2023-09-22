@@ -13,15 +13,17 @@ START_POS = (-40,600)
 sound_manager = SoundManager() 
 
 def get_font(size):
-    return pygame.font.Font("images/menu/font.ttf", size)
+    return pygame.font.Font("images/menu/Juniory.ttf", size)
 
 class Game(object):
     def __init__(self):
 
         # Level setup
+        #self.running = True
         self.currentLevelNumber = 0
         self.levels = []
         self.levels.append(Level(fileName = "levels/level_data/bwmap1.tmx"))
+        self.levels.append(Level(fileName = "levels/level_data/level_1.tmx"))
         self.currentLevel = self.levels[self.currentLevelNumber]
 
         self.overlay = pygame.image.load(os.path.join('images', 'back.png'))
@@ -31,6 +33,7 @@ class Game(object):
         self.player.rect.y = START_POS[1] - self.player.image.get_height()
         self.player.currentLevel = self.levels[self.currentLevelNumber]
         self.currentLevel.shiftLevel(-500,-900)
+
     def processEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -60,6 +63,7 @@ class Game(object):
                 rounded_y = round(mousePos[1] / 75) * 75
                 if abs(rounded_x - round_player_x) >= 75 or abs(rounded_y - round_player_y) >= 75:
                     self.put_block(rounded_x, rounded_y)
+
     def runLogic(self):
         if not self.player.gameLost and not self.player.gameVictory:
             self.player.update()
@@ -96,11 +100,18 @@ class Game(object):
             pygame.display.update()
             OPTIONS_BACK = Button(image=None, pos=(640, 460),
                               text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+            
+            NEXT_LEVEL = Button(image=None, pos=(640, 500),
+                              text_input="Next Level", font=get_font(75), base_color="Black", hovering_color="Green")
+            
             while True:
                 OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
                 OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+                NEXT_LEVEL.changeColor(OPTIONS_MOUSE_POS)
                 OPTIONS_BACK.update(screen)
+                NEXT_LEVEL.update(screen)
                 pygame.display.update()
+
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -108,7 +119,19 @@ class Game(object):
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                             print("Back Clicked")
+                            self.running = False
                             return 1
+                        if NEXT_LEVEL.checkForInput(OPTIONS_MOUSE_POS):
+                            print("Next Level Clicked")
+                            if self.currentLevelNumber < len(self.levels) - 1:
+                                self.currentLevelNumber += 1
+                                self.currentLevel = self.levels[self.currentLevelNumber]
+                                self.player.gameVictory = False
+                                main(self.currentLevelNumber)
+                            else:
+                                print("No more levels available")
+                            return 
+                        
 
     def draw(self, screen):
         screen.blit(self.overlay, [0,0])
@@ -124,7 +147,7 @@ class Game(object):
         self.player.put_block()
         self.currentLevel.put_block(x, y)
 
-def main(volume):
+def main(volume, level):
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     #screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -137,8 +160,9 @@ def main(volume):
     clock = pygame.time.Clock()
     done = False
     game = Game()
+    game.currentLevelNumber = level
 
-    while not done:
+    while not done: 
         done = game.processEvents()
         game.runLogic()
         if (game.draw(screen) == 1):
