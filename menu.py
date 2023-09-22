@@ -51,7 +51,8 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
-                    main.main(volume)
+                    if (main.main(volume) == 1):
+                        return 1
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     volume = options(volume)
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
@@ -108,6 +109,7 @@ def options(volume):
 
 if __name__ == "__main__":
     sound_manager.play_menu_music()
-    main_menu()
+    while(main_menu() == 1):
+        continue
 
 
