@@ -2,11 +2,14 @@ import pygame, sys
 from button import Button
 import main
 from soundManager import SoundManager
+import time
+import threading
 
 sound_manager = SoundManager() 
+clock = pygame.time.Clock()
 
 
-def get_font(size, font = 'images/menu/font.ttf'): 
+def get_font(size, font = 'images/menu/Juniory.ttf'): 
     return pygame.font.Font(font, size)
 
 
@@ -18,26 +21,26 @@ def main_menu():
     SCREEN = pygame.display.set_mode((1280, 720))
     pygame.display.set_caption("Menu")
 
-    BG = pygame.image.load("images/menu/background.png")
+    BG = pygame.image.load("images/menu/blanc.png")
     BG = pygame.transform.scale(BG, (1280, 720))
 
-    # GAME_TITLE = pygame.image.load("images/menu/logo.png")
-    # scaled_GAME_TITLE = pygame.transform.scale(GAME_TITLE, (600, 200))
+    GAME_TITLE = pygame.image.load("images/menu/logo.png")
+    scaled_GAME_TITLE = pygame.transform.scale(GAME_TITLE, (1232, 706))
 
     while True:
         SCREEN.blit(BG, (0, 0))
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        # TITLE_RECT = scaled_GAME_TITLE.get_rect(center = (640, 100))
-        # SCREEN.blit(scaled_GAME_TITLE, TITLE_RECT)
+        TITLE_RECT = scaled_GAME_TITLE.get_rect(center = (640, 280))
+        SCREEN.blit(scaled_GAME_TITLE, TITLE_RECT)
 
-        PLAY_BUTTON = Button(image=pygame.image.load("images/menu/Play Rect.png"), pos=(640, 350), 
-                            text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("images/menu/Play Rect.png"), pos=(640, 500), 
-                            text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("images/menu/Play Rect.png"), pos=(640, 650), 
-                            text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+        PLAY_BUTTON = Button(image=None, pos=(640, 450), 
+                            text_input="PLAY", font=get_font(60), base_color="#000000", hovering_color="Red")
+        OPTIONS_BUTTON = Button(image=None, pos=(640, 530), 
+                            text_input="OPTIONS", font=get_font(60), base_color="#000000", hovering_color="Blue")
+        QUIT_BUTTON = Button(image=None, pos=(640, 610), 
+                            text_input="QUIT", font=get_font(60), base_color="#000000", hovering_color="Green")
 
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
@@ -51,7 +54,7 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
-                    if (main.main(volume) == 1):
+                    if (main.main(volume, 0) == 1):
                         return 1
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     volume = options(volume)
@@ -109,7 +112,7 @@ def options(volume):
 
 if __name__ == "__main__":
     sound_manager.play_menu_music()
-    while(main_menu() == 1):
+    while main_menu() == 1:
         continue
 
 

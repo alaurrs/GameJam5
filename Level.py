@@ -27,13 +27,13 @@ class Level(object):
 
     # Move layer left/right
     def shiftLevel(self, shiftX, shiftY):
-        self.levelShiftX += shiftX * TILESCALE
-        self.levelShiftY += shiftY * TILESCALE
+        self.levelShiftX += shiftX
+        self.levelShiftY += shiftY
 
         for layer in self.layers:
             for tile in layer.tiles:
-                tile.rect.x += shiftX * TILESCALE*5
-                tile.rect.y += shiftY * TILESCALE
+                tile.rect.x += shiftX
+                tile.rect.y += shiftY
 
 
     # Update layer

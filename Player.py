@@ -163,6 +163,7 @@ class Player(pygame.sprite.Sprite):
         if len(tileVictoryList) > 0:
             print("Victoire")
             self.gameVictory = True
+            
 
         # If player is on ground and running, update running animation
         if self.running and self.changeY == 1:
