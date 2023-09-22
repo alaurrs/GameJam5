@@ -81,12 +81,16 @@ class Game(object):
         self.player.put_block()
         self.currentLevel.put_block(x, y)
 
-def main():
+def main(volume):
+    print('volume = ', volume)
+
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     #screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    sound_manager.set_volume(volume)
     sound_manager.play_game_music()
+    
 
     pygame.display.set_caption("The Artist")
     clock = pygame.time.Clock()
