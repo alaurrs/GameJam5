@@ -16,11 +16,11 @@ def get_font(size):
     return pygame.font.Font("images/menu/Juniory.ttf", size)
 
 class Game(object):
-    def __init__(self):
+    def __init__(self, volume, level):
 
         # Level setup
         #self.running = True
-        self.currentLevelNumber = 0
+        self.currentLevelNumber = level
         self.levels = []
         self.levels.append(Level(fileName = "levels/level_data/bwmap1.tmx"))
         self.levels.append(Level(fileName = "levels/level_data/level_1.tmx"))
@@ -33,6 +33,7 @@ class Game(object):
         self.player.rect.y = START_POS[1] - self.player.image.get_height()
         self.player.currentLevel = self.levels[self.currentLevelNumber]
         self.currentLevel.shiftLevel(-500,-900)
+        self.volume = volume
 
     def processEvents(self):
         for event in pygame.event.get():
@@ -122,12 +123,14 @@ class Game(object):
                             self.running = False
                             return 1
                         if NEXT_LEVEL.checkForInput(OPTIONS_MOUSE_POS):
-                            print("Next Level Clicked")
+                            print(self.levels)
                             if self.currentLevelNumber < len(self.levels) - 1:
+                                print("Next Level -------")
                                 self.currentLevelNumber += 1
                                 self.currentLevel = self.levels[self.currentLevelNumber]
                                 self.player.gameVictory = False
-                                main(self.currentLevelNumber)
+                                pygame.quit()
+                                main(self.volume, self.currentLevelNumber)
                             else:
                                 print("No more levels available")
                             return 
@@ -148,6 +151,7 @@ class Game(object):
         self.currentLevel.put_block(x, y)
 
 def main(volume, level):
+    print("level : " + str(level))
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     #screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -159,7 +163,7 @@ def main(volume, level):
     pygame.display.set_caption("The Artist")
     clock = pygame.time.Clock()
     done = False
-    game = Game()
+    game = Game(volume, level)
     game.currentLevelNumber = level
 
     while not done: 
