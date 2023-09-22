@@ -126,7 +126,7 @@ class Player(pygame.sprite.Sprite):
             self.currentLevel.shiftLevel(difference, 0)
 
 
-        const = 200
+        const = 400
 
         # Move screen if player reaches screen bounds
         if self.rect.bottom >= SCREEN_HEIGHT - const:
