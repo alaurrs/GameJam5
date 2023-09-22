@@ -22,8 +22,8 @@ class Game(object):
         #self.running = True
         self.currentLevelNumber = level
         self.levels = []
+        self.levels.append(Level(fileName = "levels/level_data/THE_ARTIST_TILE.tmx"))
         self.levels.append(Level(fileName = "levels/level_data/bwmap1.tmx"))
-        self.levels.append(Level(fileName = "levels/level_data/level_1.tmx"))
         self.currentLevel = self.levels[self.currentLevelNumber]
 
         self.overlay = pygame.image.load(os.path.join('images', 'back.png'))
