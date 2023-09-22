@@ -44,4 +44,4 @@ class Level(object):
         block_img = pygame.image.load(os.path.join("images", "bulle.png"))
         block_img = pygame.transform.scale(block_img, (75,75))
         tile = Tile(block_img, x,y)
-        self.layers[0].tiles.add(tile)
+        self.layers[1].tiles.add(tile)

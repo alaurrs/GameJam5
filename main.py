@@ -48,6 +48,8 @@ class Game(object):
                     self.player.goRight()
                 elif event.key == pygame.K_UP:
                     self.player.jump()
+                elif event.key == pygame.K_q:
+                    pygame.quit()
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT and self.player.changeX < 0:
                     self.player.stop()
