@@ -99,10 +99,10 @@ class Game(object):
             VICTORY_RECT = VICTORY_TEXT.get_rect(center=(640, 100))
             screen.blit(VICTORY_TEXT, VICTORY_RECT)
             pygame.display.update()
-            OPTIONS_BACK = Button(image=None, pos=(640, 460),
+            OPTIONS_BACK = Button(image=None, pos=(500, 460),
                               text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
             
-            NEXT_LEVEL = Button(image=None, pos=(640, 500),
+            NEXT_LEVEL = Button(image=None, pos=(980, 460),
                               text_input="Next Level", font=get_font(75), base_color="Black", hovering_color="Green")
             
             while True:
