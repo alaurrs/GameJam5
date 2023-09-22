@@ -75,6 +75,7 @@ class Player(pygame.sprite.Sprite):
         self.changeX = -WALK_SPEED
 
     def stop(self):
+        self.image = self.images[0]
         self.running = False
         self.changeX = 0
 

@@ -46,6 +46,8 @@ class Game(object):
                     self.player.stop()
                 elif event.key == pygame.K_RIGHT and self.player.changeX > 0:
                     self.player.stop()
+            else:
+                self.player.stop()
             if pygame.mouse.get_pressed(3)[0] == True:
                 mousePos = pygame.mouse.get_pos()
                 # Arrondir mousePos[0] et mousePos[1] aux multiples de 75
