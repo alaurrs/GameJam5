@@ -1,8 +1,10 @@
-import pygame
+import pygame, sys
 import os
 from Player import Player
 from Level import Level
 from soundManager import SoundManager
+from button import Button
+
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
@@ -67,8 +69,23 @@ class Game(object):
             DEFEAT_TEXT = get_font(100).render("DEFEAT", True, "#b68f40")
             DEFEAT_RECT = DEFEAT_TEXT.get_rect(center=(640, 100))
             screen.blit(DEFEAT_TEXT, DEFEAT_RECT)
-            pygame.display.update()
-            return self.player.gameLost
+            OPTIONS_BACK = Button(image=None, pos=(640, 460),
+                              text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+            while True:
+                OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+                OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+                OPTIONS_BACK.update(screen)
+                pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                            print("Back Clicked")
+                            return 1
+        else:
+            return 0
 
     def checkGameVictory(self, screen):
         if self.player.gameVictory:
@@ -82,7 +99,8 @@ class Game(object):
         screen.blit(self.overlay, [0,0])
         self.currentLevel.draw(screen)
         self.player.draw(screen)
-        self.checkGameLost(screen)
+        if (self.checkGameLost(screen) == 1):
+            return 1
         self.checkGameVictory(screen)
         pygame.display.flip()
 
@@ -91,8 +109,6 @@ class Game(object):
         self.currentLevel.put_block(x, y)
 
 def main(volume):
-    print('volume = ', volume)
-
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     #screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -109,11 +125,11 @@ def main(volume):
     while not done:
         done = game.processEvents()
         game.runLogic()
-        game.draw(screen)
+        if (game.draw(screen) == 1):
+            pygame.quit()
+            return 1
         #game.checkGameLost(screen)
         clock.tick(60)
-
-    pygame.quit()
 
 
 if __name__ == '__main__':
