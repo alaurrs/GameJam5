@@ -6,6 +6,7 @@ from soundManager import SoundManager
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
+START_POS = (-40,600)
 
 sound_manager = SoundManager() 
 
@@ -24,8 +25,8 @@ class Game(object):
         self.overlay = pygame.image.load(os.path.join('images', 'back.png'))
         self.overlay = pygame.transform.scale(self.overlay, (SCREEN_WIDTH, SCREEN_HEIGHT*2))
         self.player = Player()
-        self.player.rect.x = 40
-        self.player.rect.y = 500 - self.player.image.get_height()
+        self.player.rect.x = START_POS[0]
+        self.player.rect.y = START_POS[1] - self.player.image.get_height()
         self.player.currentLevel = self.levels[self.currentLevelNumber]
         self.currentLevel.shiftLevel(-500,-900)
     def processEvents(self):
