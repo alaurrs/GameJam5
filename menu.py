@@ -32,11 +32,11 @@ def main_menu():
         # TITLE_RECT = scaled_GAME_TITLE.get_rect(center = (640, 100))
         # SCREEN.blit(scaled_GAME_TITLE, TITLE_RECT)
 
-        PLAY_BUTTON = Button(image=pygame.image.load("images/menu/Options Rect.png"), pos=(640, 350), 
+        PLAY_BUTTON = Button(image=pygame.image.load("images/menu/Play Rect.png"), pos=(640, 350), 
                             text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("images/menu/Options Rect.png"), pos=(640, 500), 
+        OPTIONS_BUTTON = Button(image=pygame.image.load("images/menu/Play Rect.png"), pos=(640, 500), 
                             text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("images/menu/Options Rect.png"), pos=(640, 650), 
+        QUIT_BUTTON = Button(image=pygame.image.load("images/menu/Play Rect.png"), pos=(640, 650), 
                             text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
 
