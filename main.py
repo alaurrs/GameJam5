@@ -58,7 +58,7 @@ class Game(object):
                 if abs(rounded_x - round_player_x) >= 75 or abs(rounded_y - round_player_y) >= 75:
                     self.put_block(rounded_x, rounded_y)
     def runLogic(self):
-        if not self.player.gameLost:
+        if not self.player.gameLost and not self.player.gameVictory:
             self.player.update()
         return None
 
@@ -70,11 +70,20 @@ class Game(object):
             pygame.display.update()
             return self.player.gameLost
 
+    def checkGameVictory(self, screen):
+        if self.player.gameVictory:
+            VICTORY_TEXT = get_font(100).render("VICTORY", True, "#b68f40")
+            VICTORY_RECT = VICTORY_TEXT.get_rect(center=(640, 100))
+            screen.blit(VICTORY_TEXT, VICTORY_RECT)
+            pygame.display.update()
+            return self.player.gameVictory
+
     def draw(self, screen):
         screen.blit(self.overlay, [0,0])
         self.currentLevel.draw(screen)
         self.player.draw(screen)
         self.checkGameLost(screen)
+        self.checkGameVictory(screen)
         pygame.display.flip()
 
     def put_block(self,x,y):
