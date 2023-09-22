@@ -94,7 +94,21 @@ class Game(object):
             VICTORY_RECT = VICTORY_TEXT.get_rect(center=(640, 100))
             screen.blit(VICTORY_TEXT, VICTORY_RECT)
             pygame.display.update()
-            return self.player.gameVictory
+            OPTIONS_BACK = Button(image=None, pos=(640, 460),
+                              text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+            while True:
+                OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+                OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+                OPTIONS_BACK.update(screen)
+                pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                            print("Back Clicked")
+                            return 1
 
     def draw(self, screen):
         screen.blit(self.overlay, [0,0])
@@ -102,7 +116,8 @@ class Game(object):
         self.player.draw(screen)
         if (self.checkGameLost(screen) == 1):
             return 1
-        self.checkGameVictory(screen)
+        if (self.checkGameVictory(screen) == 1):
+            return 1
         pygame.display.flip()
 
     def put_block(self,x,y):
