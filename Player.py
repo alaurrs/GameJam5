@@ -88,7 +88,7 @@ class Player(pygame.sprite.Sprite):
         self.sound.play_jump_sound()
 
         if len(tileHitList) > 0:
-            self.changeY = -7
+            self.changeY = -9
 
     def put_block(self):
         print("FEURjj")
